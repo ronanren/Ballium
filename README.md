@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <!DOCTYPE html>
 <html>
 
@@ -11,18 +10,18 @@
 
 <body class="stackedit">
   <div class="stackedit__html"><h1 id="projet-python">Projet-Python</h1>
-<h1 id="fonctionnalités">Fonctionnalités</h1>
+<h1 id="fonctionnalitÃ©s">FonctionnalitÃ©s</h1>
 <ul>
-<li>game ? mmh I don’t know ??</li>
+<li>game ? mmh I donâ€™t know ??</li>
 <li></li>
 <li></li>
 </ul>
 <h1 id="utilisation">Utilisation</h1>
-<h1 id="présentation">Présentation</h1>
+<h1 id="prÃ©sentation">PrÃ©sentation</h1>
 </div>
 </body>
 
 </html>
 =======
 "# Projet-Python"
->>>>>>> 62d4521cbaa3464601da4c9156736a5705bee0fd
+
