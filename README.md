@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html>
 
@@ -22,3 +23,6 @@
 </body>
 
 </html>
+=======
+"# Projet-Python"
+>>>>>>> 62d4521cbaa3464601da4c9156736a5705bee0fd
