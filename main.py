@@ -1,6 +1,5 @@
 from tkinter import * 
 import random
-import win32gui
 import time
 from winsound import *
 
