@@ -3,8 +3,6 @@ import random
 import time
 from winsound import *
 
-#faire plusieurs niveau qui se lance aleatoirement et dans options, faire modifier la difficulte(grosseur des balles)
-#puis faire modifier si on veut la musique ou non
 
 fenetre = Tk() 
 fenetre.title("Ballium") 
@@ -22,7 +20,6 @@ def gameover(event):
     fenetre.bind("<Button-1>", restart)
     fenetre.after_cancel(anim)
     canvas.create_image(500,300, image=gameoverimage)
-    fenetre.unbind("<Leave>")
        
         
 
@@ -32,7 +29,6 @@ def gameover(event):
 def restart(event):
     global tt2, level
     fenetre.unbind("<Button-1>")
-    fenetre.bind("<Leave>", gameover)
     PlaySound("Sound/ExtraStage.wav", SND_FILENAME | SND_ASYNC)
     tt2 = 0
     level = 1
@@ -96,7 +92,7 @@ def animation():
         if canvas.coords(balle50)[3] > -200:
             canvas.delete(textelevel2)
 
-    anim = fenetre.after(20, animation)
+    anim = fenetre.after(30, animation)
 
 
 def start(event):
