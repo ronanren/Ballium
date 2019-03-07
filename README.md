@@ -12,7 +12,7 @@
 <h1 id="fonctionnalités">Fonctionnalités</h1>
 <ul>
 <li>Python <3</li>
-<li></li>
+<li>J'suis d'accord</li>
 <li></li>
 </ul>
 <h1 id="utilisation">Utilisation</h1>
