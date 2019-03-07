@@ -4,7 +4,7 @@ import time
 from winsound import *
 
 
-fenetre = Tk() 
+fenetre = Tk()
 fenetre.title("Ballium") 
 fenetre.geometry("450x300+400+200")
 fenetre.resizable(width=False,height=False)
@@ -23,10 +23,11 @@ def gameover(event):
     fenetre.after_cancel(anim)
     canvas.create_image(500,300, image=gameoverimage)
        
-        
 
 
-    
+
+
+
 
 def restart(event):
     global tt2, level
@@ -39,7 +40,8 @@ def restart(event):
     canvas.create_image(500,300, image=backgroundjeu)
     level1()
     animation()
- 
+
+
 def level1():
     global textelevel1
     x = -400
@@ -56,10 +58,8 @@ def level1():
         y = y + 20
     x, y = -400, -420
 
-
     for i in range(0, 150):
         canvas.tag_bind(globals()['balle%s' % i], "<Any-Enter>", gameover)
-    
 
 
 def level2():
@@ -98,20 +98,21 @@ def animation():
     anim = fenetre.after(30, animation)
 
 
-def continu(event):
-    canvas.delete(transparent)
-    fenetre.bind("<Escape>", pause)
-    fenetre.unbind("<c>")
-    animation()
-
-
 def pause(event):
-    global transparent, anim
+    global transparent, anim, continueButtonDisplay
     fenetre.unbind("<Escape>")
     fenetre.unbind("<Leave>")
     fenetre.after_cancel(anim)
     transparent = canvas.create_image(500,300, image=transp)
-    fenetre.bind("<c>", continu)
+    continueButtonDisplay = canvas.create_image(500,250, image=ContinueButton)
+    canvas.tag_bind(continueButtonDisplay,'<Button-1>', continu)
+
+
+def continu(event):
+    canvas.delete(transparent)
+    fenetre.bind("<Escape>", pause)
+    canvas.delete(continueButtonDisplay)
+    animation()
 
 
 def start(event):
@@ -125,6 +126,7 @@ def start(event):
     canvas.create_image(500,300, image=backgroundjeu)
     level1()
     animation()
+
 
 def menu(event):
     global tt, tt1, giflist1, images1
@@ -178,6 +180,7 @@ images1 = ""
 tt1 = 1
 
 transp = PhotoImage(file ='Images/transparent.gif')
+ContinueButton = PhotoImage(file='Images\ContinueButton.png')
 
 
 #image pour le jeu "Game over"
