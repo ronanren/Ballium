@@ -13,7 +13,7 @@
 <ul>
 <li>Python <3</li>
 <li>J'suis d'accord</li>
-<li></li>
+<li>Le Python c'est super</li>
 </ul>
 <h1 id="utilisation">Utilisation</h1>
 <h1 id="présentation">Présentation</h1>
