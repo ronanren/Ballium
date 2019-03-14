@@ -181,7 +181,7 @@ images1 = ""
 tt1 = 1
 
 transp = PhotoImage(file='Images/transparent.gif')
-ContinueButton = PhotoImage(file='Images/ContinueButton.png')
+ContinueButton = PhotoImage(file='Images/ContinueButton.gif')
 boutonquitt = PhotoImage(file='Images/boutonquitpause.gif')
 btnmainmenu = PhotoImage(file='Images/boutonmainmenupause.gif')
 
