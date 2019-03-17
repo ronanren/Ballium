@@ -15,8 +15,8 @@ canvas.pack(fill="both", expand=True)
 fenetre.configure(cursor='dot')
 
 level = 1
-
-
+speed = 0 # les % de increased (titre indicatif)
+vitesse = 10 # la vitesse des balles (titre qualitatif)
 def gameover(event):
     global pp, tt2, images2, canvas, anim
     tt2 = 1
@@ -25,17 +25,21 @@ def gameover(event):
     fenetre.unbind("<Escape>")
     fenetre.after_cancel(updatetime)
     fenetre.after_cancel(anim)
-    canvas.create_image(500, 300, image=gameoverimage)
-    text_clock = canvas.create_text(920, 50, fill="white", font="Impact 80 bold", text=str_time)
+    canvas.create_image(500, 300, image=backgroundjeu)
+    canvas.create_text(500, 150, fill="white", font="Impact 70", text="Game Over")
+    canvas.create_text(500, 300, fill="white", font="Impact 70", text="Click to play again")
+    canvas.create_text(500, 450, fill="white", font="Impact 70", text="Your score : " + str(str_time))
+    
 
 
 def restart(event):
-    global tt2, level
+    global tt2, level, speed
     fenetre.unbind("<Button-1>")
     fenetre.bind("<Escape>", pause)
     PlaySound("Sound/ExtraStage.wav", SND_FILENAME | SND_ASYNC)
     tt2 = 0
     level = 1
+    speed = 0
     canvas.delete(ALL)
     canvas.create_image(500, 300, image=backgroundjeu)
     startTime()
@@ -44,59 +48,61 @@ def restart(event):
 
 
 def level1():
-    global textelevel1
+    global textelevel1, speed, vitesse
     x = -400
     y = -420
-    textelevel1 = canvas.create_text(500, 300, fill="white", font="Impact 80 bold", text="LEVEL 1")
+    if level == 1:
+        textelevel1 = canvas.create_text(500, 300, fill="white", font="Impact 80 bold", text="Let's go !")
+    else:
+        speed = speed + 5
+        vitesse = vitesse + 1
+        textelevel1 = canvas.create_text(500, 300, fill="white", font="Impact 80 bold", text=str(speed) + "% increased speed")
     for i in range(0, 75):
-        globals()['balle%s' % i] = canvas.create_oval(x, -400, y, -420, fill='#C180FE')
+        globals()['balle%s' % i] = canvas.create_oval(x, -700, y, -720, fill='#C180FE')
         x = x + 20
         y = y + 20
     x, y = -400, -420
     for i in range(75, 150):
-        globals()['balle%s' % i] = canvas.create_oval(x, -800, y, -820, fill='#54C5F3')
+        globals()['balle%s' % i] = canvas.create_oval(x, -1000, y, -1020, fill='#54C5F3')
+        x = x + 20
+        y = y + 20
+    x, y = -400, -420
+    for i in range(150, 225):
+        globals()['balle%s' % i] = canvas.create_oval(x, -1200, y, -1220, fill='red')
+        x = x + 20
+        y = y + 20
+    x, y = -400, -420
+    for i in range(225, 300):
+        globals()['balle%s' % i] = canvas.create_oval(x, -1500, y, -1520, fill='purple')
         x = x + 20
         y = y + 20
     x, y = -400, -420
 
-    for i in range(0, 150):
+    for i in range(0, 300):
         canvas.tag_bind(globals()['balle%s' % i], "<Any-Enter>", gameover)
 
-
-def level2():
-    global textelevel2, text_clock
-    x = -400
-    y = -420
-    canvas.delete(ALL)
-    canvas.create_image(500, 300, image=backgroundjeu)
-    text_clock = canvas.create_text(920, 50, fill="white", font="Impact 80 bold")
-    textelevel2 = canvas.create_text(500, 300, fill="white", font="Impact 80 bold", text="LEVEL 2")
-    for i in range(0, 100):
-        globals()['balle%s' % i] = canvas.create_oval(x, -400, y, -420, fill='#C180FE')
-        x = x + 20
-        y = y + 20
-    for i in range(0, 100):
-        canvas.tag_bind(globals()['balle%s' % i], "<Any-Enter>", gameover)
 
 
 def animation():
-    global anim, level
+    global anim, level, text_clock
     w = fenetre.winfo_width()
     h = fenetre.winfo_height()
-    if level == 1:
+    if canvas.coords(balle50)[3] < -150:
         for i in range(0, 150):
-            canvas.move(globals()['balle%s' % i], 0, random.randint(0, 15))
-        if canvas.coords(balle50)[3] > -200:
-            canvas.delete(textelevel1)
-        if canvas.coords(balle100)[3] > h + 400:
-            level += 1
-            level2()
-    if level == 2:
-        for i in range(0, 100):
-            canvas.move(globals()['balle%s' % i], 0, random.randint(0, 11))
-        if canvas.coords(balle50)[3] > -200:
-            canvas.delete(textelevel2)
-    anim = fenetre.after(40, animation)
+            canvas.move(globals()['balle%s' % i], 0, random.randint(0, 40))
+        for i in range(150, 300):
+            canvas.move(globals()['balle%s' % i], 0, random.randint(0, 30))
+    else:
+        for i in range(0, 300):
+            canvas.move(globals()['balle%s' % i], 0, random.uniform(0, vitesse))
+    if canvas.coords(balle50)[3] > -150:
+        canvas.delete(textelevel1)
+    if canvas.coords(balle250)[3] > h + 250:
+        level = 2
+        for i in range(0, 300):
+            canvas.delete(globals()['balle%s' % i])
+        level1()
+    anim = fenetre.after(60, animation)
 
 
 def pause(event):
@@ -150,8 +156,10 @@ def startTime():
 
 
 def start(event):
-    global tt1
+    global tt1, speed, level
     tt1 = 0
+    speed = 0
+    level = 1
     PlaySound("Sound/ExtraStage.wav", SND_FILENAME | SND_ASYNC)
     fenetre.unbind("<Return>")
     fenetre.bind("<Escape>", pause)
