@@ -3,13 +3,13 @@ import random
 import time
 from winsound import *
 import sys
-
+from timeit import default_timer
 
 
 fenetre = Tk()
 fenetre.title("Ballium")
 fenetre.geometry("450x300+400+200")
-fenetre.resizable(width=False, height=False)
+#fenetre.resizable(width=False, height=False)
 canvas = Canvas(fenetre, width=1000, height=600, bg="#202F3E", bd=0, highlightthickness=0)
 canvas.pack(fill="both", expand=True)
 fenetre.configure(cursor='dot')
@@ -23,8 +23,10 @@ def gameover(event):
     PlaySound("Sound/GameOverYeah.wav", SND_FILENAME | SND_ASYNC)
     fenetre.bind("<Button-1>", restart)
     fenetre.unbind("<Escape>")
+    fenetre.after_cancel(updatetime)
     fenetre.after_cancel(anim)
     canvas.create_image(500, 300, image=gameoverimage)
+    text_clock = canvas.create_text(920, 50, fill="white", font="Impact 80 bold", text=str_time)
 
 
 def restart(event):
@@ -36,6 +38,7 @@ def restart(event):
     level = 1
     canvas.delete(ALL)
     canvas.create_image(500, 300, image=backgroundjeu)
+    startTime()
     level1()
     animation()
 
@@ -61,11 +64,12 @@ def level1():
 
 
 def level2():
-    global textelevel2
+    global textelevel2, text_clock
     x = -400
     y = -420
     canvas.delete(ALL)
     canvas.create_image(500, 300, image=backgroundjeu)
+    text_clock = canvas.create_text(920, 50, fill="white", font="Impact 80 bold")
     textelevel2 = canvas.create_text(500, 300, fill="white", font="Impact 80 bold", text="LEVEL 2")
     for i in range(0, 100):
         globals()['balle%s' % i] = canvas.create_oval(x, -400, y, -420, fill='#C180FE')
@@ -81,7 +85,7 @@ def animation():
     h = fenetre.winfo_height()
     if level == 1:
         for i in range(0, 150):
-            canvas.move(globals()['balle%s' % i], 0, random.randint(0, 10))
+            canvas.move(globals()['balle%s' % i], 0, random.randint(0, 15))
         if canvas.coords(balle50)[3] > -200:
             canvas.delete(textelevel1)
         if canvas.coords(balle100)[3] > h + 400:
@@ -92,14 +96,17 @@ def animation():
             canvas.move(globals()['balle%s' % i], 0, random.randint(0, 11))
         if canvas.coords(balle50)[3] > -200:
             canvas.delete(textelevel2)
-    anim = fenetre.after(30, animation)
+    anim = fenetre.after(40, animation)
 
 
 def pause(event):
-    global transparent, anim, continueButton, boutonquit, boutonmainmenu
+    global transparent, anim, continueButton, boutonquit, boutonmainmenu, pausetime, timepause
     fenetre.unbind("<Escape>")
     fenetre.unbind("<Leave>")
     fenetre.after_cancel(anim)
+    fenetre.after_cancel(updatetime)
+    timepause = 0
+    pausetime = default_timer()
     transparent = canvas.create_image(500, 300, image=transp)
     continueButton = canvas.create_image(500, 525, image=ContinueButton)
     boutonmainmenu = canvas.create_image(200, 525, image=btnmainmenu)
@@ -110,12 +117,36 @@ def pause(event):
 
 
 def resume(event):
+    global timepause
     canvas.delete(transparent)
     canvas.delete(continueButton)
     canvas.delete(boutonmainmenu)
     canvas.delete(boutonquit)
     fenetre.bind("<Escape>", pause)
+    fenetre.bind("<Leave>", gameover)
+    timepause = default_timer() - pausetime
+    updateTime()
     animation()
+
+
+def updateTime():
+    global updatetime, str_time, timepause, timeepause
+    timeepause = timeepause + timepause
+    now = default_timer() - starts - timeepause
+    timepause = 0
+    minutes, seconds = divmod(now, 10000)
+    str_time = "%02d" % (seconds)
+    canvas.itemconfigure(text_clock, text=str_time)
+    updatetime = fenetre.after(1000, updateTime)
+
+def startTime():
+    global text_clock, starts, timepause, timeepause
+    starts = default_timer()
+    timepause = 0
+    timeepause = 0
+    text_clock = canvas.create_text(920, 50, fill="white", font="Impact 80 bold")
+    updateTime()
+
 
 
 def start(event):
@@ -127,8 +158,10 @@ def start(event):
     canvas.delete(ALL)
     fenetre.bind("<Leave>", gameover)
     canvas.create_image(500, 300, image=backgroundjeu)
+    startTime()
     level1()
     animation()
+
 
 
 def menu(event):
@@ -317,6 +350,7 @@ def backtomenu(event):
             time.sleep(0.08)
         if tt == 0:
             break
+
 
 
 fenetre.mainloop()
