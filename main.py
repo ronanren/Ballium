@@ -5,6 +5,7 @@ from winsound import *
 import sys
 from timeit import default_timer
 
+# Modifier couleur des balles (systeme de couleur aleatoire)
 
 fenetre = Tk()
 fenetre.title("Ballium")
