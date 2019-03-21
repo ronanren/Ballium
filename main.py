@@ -47,11 +47,16 @@ def restart(event):
     level1()
     animation()
 
-
 def level1():
     global textelevel1, speed, vitesse
     x = -400
     y = -420
+
+    color1 = "#{:06x}".format(random.randint(0, 0xFFFFFF))
+    color2 = "#{:06x}".format(random.randint(0, 0xFFFFFF))
+    color3 = "#{:06x}".format(random.randint(0, 0xFFFFFF))
+    color4 = "#{:06x}".format(random.randint(0, 0xFFFFFF))
+
     if level == 1:
         textelevel1 = canvas.create_text(500, 300, fill="white", font="Impact 80 bold", text="Let's go !")
     else:
@@ -59,22 +64,22 @@ def level1():
         vitesse = vitesse + 1
         textelevel1 = canvas.create_text(500, 300, fill="white", font="Impact 80 bold", text=str(speed) + "% increased speed")
     for i in range(0, 75):
-        globals()['balle%s' % i] = canvas.create_oval(x, -700, y, -720, fill='#C180FE')
+        globals()['balle%s' % i] = canvas.create_oval(x, -700, y, -720, fill=color1)
         x = x + 20
         y = y + 20
     x, y = -400, -420
     for i in range(75, 150):
-        globals()['balle%s' % i] = canvas.create_oval(x, -1000, y, -1020, fill='#54C5F3')
+        globals()['balle%s' % i] = canvas.create_oval(x, -1000, y, -1020, fill=color2)
         x = x + 20
         y = y + 20
     x, y = -400, -420
     for i in range(150, 225):
-        globals()['balle%s' % i] = canvas.create_oval(x, -1200, y, -1220, fill='red')
+        globals()['balle%s' % i] = canvas.create_oval(x, -1200, y, -1220, fill=color3)
         x = x + 20
         y = y + 20
     x, y = -400, -420
     for i in range(225, 300):
-        globals()['balle%s' % i] = canvas.create_oval(x, -1500, y, -1520, fill='purple')
+        globals()['balle%s' % i] = canvas.create_oval(x, -1500, y, -1520, fill=color4)
         x = x + 20
         y = y + 20
     x, y = -400, -420
@@ -359,7 +364,6 @@ def backtomenu(event):
             time.sleep(0.08)
         if tt == 0:
             break
-
 
 
 fenetre.mainloop()
