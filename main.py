@@ -4,6 +4,8 @@ import time
 from winsound import *
 import sys
 from timeit import default_timer
+import requests
+import re
 
 # Modifier couleur des balles (systeme de couleur aleatoire)
 
@@ -19,6 +21,26 @@ level = 1
 speed = 0 # les % de increased (titre indicatif)
 vitesse = 10 # la vitesse des balles (titre qualitatif)
 
+def updatebdd():
+    r = requests.get('https://ballium.000webhostapp.com/gestiondata.php')
+    data = r.text
+    pos1 = data.find('<table style')
+    pos2 = data.find('<table>')
+    scores = r.text[pos1:pos2]
+    login = "ronan"
+    newscore = int(str_time)
+    pos3 = scores.find(login)
+    score = scores[pos3:pos3 + 30]
+    score = score.replace("</td>", "")
+    score = score.replace("<td>", "")
+    score = re.sub("\D", "", score)
+    if score == "":
+        score = 0
+    if int(newscore) > int(score):
+        print("Nouveau record !!")
+        r = requests.get('https://ballium.000webhostapp.com/gestiondata.php?login=' + str(login) + '&score=' + str(newscore))
+    else:
+        print("Play again")
 
 def gameover(event):
     global pp, tt2, images2, canvas, anim
@@ -32,7 +54,7 @@ def gameover(event):
     canvas.create_text(500, 150, fill="white", font="Impact 70", text="Game Over")
     canvas.create_text(500, 300, fill="white", font="Impact 70", text="Click to play again")
     canvas.create_text(500, 450, fill="white", font="Impact 70", text="Your score : " + str(str_time))
-    
+    updatebdd()
 
 
 def restart(event):
