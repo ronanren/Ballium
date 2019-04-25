@@ -10,7 +10,7 @@ from timeit import default_timer
 fenetre = Tk()
 fenetre.title("Ballium")
 fenetre.geometry("450x300+400+200")
-#fenetre.resizable(width=False, height=False)
+fenetre.resizable(width=False, height=False)
 canvas = Canvas(fenetre, width=1000, height=600, bg="#202F3E", bd=0, highlightthickness=0)
 canvas.pack(fill="both", expand=True)
 fenetre.configure(cursor='dot')
@@ -18,6 +18,8 @@ fenetre.configure(cursor='dot')
 level = 1
 speed = 0 # les % de increased (titre indicatif)
 vitesse = 10 # la vitesse des balles (titre qualitatif)
+
+
 def gameover(event):
     global pp, tt2, images2, canvas, anim
     tt2 = 1
@@ -250,6 +252,9 @@ photo5 = PhotoImage(file='Images/bouton_quit1.gif')
 photo6 = PhotoImage(file='Images/bouton_quit2.gif')
 button3 = canvas.create_image(384, 274, image=photo5)
 
+imageRetour = PhotoImage(file='Images/bouton_BackMenu.gif')
+
+
 
 # Animation pour les boutons
 def button1anim1(event):
@@ -285,33 +290,6 @@ def destroy(event):
     except:
         pass
 
-
-# Assignement des boutons pour leurs actions/animations
-canvas.tag_bind(button1, "<Button-1>", menu)
-canvas.tag_bind(button3, "<Button-1>", destroy)
-
-canvas.tag_bind(button1, "<Enter>", button1anim1)
-canvas.tag_bind(button1, "<Leave>", button1anim2)
-canvas.tag_bind(button2, "<Enter>", button2anim1)
-canvas.tag_bind(button2, "<Leave>", button2anim2)
-canvas.tag_bind(button3, "<Enter>", button3anim1)
-canvas.tag_bind(button3, "<Leave>", button3anim2)
-
-# Animation du gif du menu
-while 1:
-    for gif in giflist:
-        try:
-            canvas.delete(images)
-            images = canvas.create_image(width / 2.0, height / 2.0, image=gif)
-            canvas.update()
-        except TclError:
-            pass
-        if tt == 0:
-            break
-        time.sleep(0.08)
-    if tt == 0:
-        break
-
 def backtomenu(event):
     global tt, tt1, images
     fenetre.geometry("450x300+400+200")
@@ -336,7 +314,6 @@ def backtomenu(event):
     def button3anim2(event):
         canvas.itemconfig(button3, image=photo5)
 
-
     tt = 1
     tt1 = 1
     button1 = canvas.create_image(66, 274, image=photo1)
@@ -344,6 +321,7 @@ def backtomenu(event):
     button3 = canvas.create_image(384, 274, image=photo5)
     canvas.tag_bind(button1, "<Button-1>", menu)
     canvas.tag_bind(button3, "<Button-1>", destroy)
+    canvas.tag_bind(button2, "<Button-1>", options)
     canvas.tag_bind(button1, "<Enter>", button1anim1)
     canvas.tag_bind(button1, "<Leave>", button1anim2)
     canvas.tag_bind(button2, "<Enter>", button2anim1)
@@ -364,6 +342,41 @@ def backtomenu(event):
             time.sleep(0.08)
         if tt == 0:
             break
+
+def options(event):
+    global tt
+    canvas.delete(ALL)
+    tt = 0
+    backButton = canvas.create_image(225, 274, image=imageRetour)
+    canvas.tag_bind(backButton, "<Button-1>", backtomenu)
+
+# Assignement des boutons pour leurs actions/animations
+canvas.tag_bind(button1, "<Button-1>", menu)
+canvas.tag_bind(button3, "<Button-1>", destroy)
+canvas.tag_bind(button2, "<Button-1>", options)
+canvas.tag_bind(button1, "<Enter>", button1anim1)
+canvas.tag_bind(button1, "<Leave>", button1anim2)
+canvas.tag_bind(button2, "<Enter>", button2anim1)
+canvas.tag_bind(button2, "<Leave>", button2anim2)
+canvas.tag_bind(button3, "<Enter>", button3anim1)
+canvas.tag_bind(button3, "<Leave>", button3anim2)
+
+# Animation du gif du menu
+while 1:
+    for gif in giflist:
+        try:
+            canvas.delete(images)
+            images = canvas.create_image(width / 2.0, height / 2.0, image=gif)
+            canvas.update()
+        except TclError:
+            pass
+        if tt == 0:
+            break
+        time.sleep(0.08)
+    if tt == 0:
+        break
+
+
 
 
 fenetre.mainloop()
