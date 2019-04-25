@@ -275,6 +275,7 @@ photo6 = PhotoImage(file='Images/bouton_quit2.gif')
 button3 = canvas.create_image(384, 274, image=photo5)
 
 imageRetour = PhotoImage(file='Images/bouton_BackMenu.gif')
+imagechangeusername = PhotoImage(file='Images/bouton_change-username.gif')
 
 
 
@@ -364,13 +365,25 @@ def backtomenu(event):
             time.sleep(0.08)
         if tt == 0:
             break
+def changeusername1(event):
+    fenetre1 = Tk()
+    fenetre1.title("Change username")
+    fenetre1.geometry("200x50+400+200")
+    fenetre1.resizable(width=False, height=False)
+    Entry(fenetre1).pack()
+    fenetre1.mainloop()
 
 def options(event):
     global tt
     canvas.delete(ALL)
     tt = 0
+    fenetre.config(bg="#202F3E")
     backButton = canvas.create_image(225, 274, image=imageRetour)
     canvas.tag_bind(backButton, "<Button-1>", backtomenu)
+    changeusername = canvas.create_image(200,100, image=imagechangeusername)
+    canvas.tag_bind(changeusername, "<Button-1>", changeusername1)
+
+
 
 # Assignement des boutons pour leurs actions/animations
 canvas.tag_bind(button1, "<Button-1>", menu)
