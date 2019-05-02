@@ -6,6 +6,7 @@ import sys
 from timeit import default_timer
 import requests
 import re
+from tkinter import messagebox
 
 # Modifier couleur des balles (systeme de couleur aleatoire)
 
@@ -27,9 +28,11 @@ def updatebdd():
     pos1 = data.find('<table style')
     pos2 = data.find('<table>')
     scores = r.text[pos1:pos2]
-    login = "ronan"
     newscore = int(str_time)
-    pos3 = scores.find(login)
+    file = open("username.txt", "r")
+    username = file.read()[0:12]
+    file.close()
+    pos3 = scores.find(str(username))
     score = scores[pos3:pos3 + 30]
     score = score.replace("</td>", "")
     score = score.replace("<td>", "")
@@ -38,7 +41,7 @@ def updatebdd():
         score = 0
     if int(newscore) > int(score):
         print("Nouveau record !!")
-        r = requests.get('https://ballium.000webhostapp.com/gestiondata.php?login=' + str(login) + '&score=' + str(newscore))
+        r = requests.get('https://ballium.000webhostapp.com/gestiondata.php?login=' + str(username) + '&score=' + str(newscore))
     else:
         print("Play again")
 
@@ -276,6 +279,7 @@ button3 = canvas.create_image(384, 274, image=photo5)
 
 imageRetour = PhotoImage(file='Images/bouton_BackMenu.gif')
 imagechangeusername = PhotoImage(file='Images/bouton_change-username.gif')
+imagechangesaving = PhotoImage(file='Images/bouton_saving-scores.gif')
 
 
 
@@ -365,13 +369,46 @@ def backtomenu(event):
             time.sleep(0.08)
         if tt == 0:
             break
+
+def changeuser():
+    file = open("username.txt", "w")
+    file.write(login.get())
+    file.close()
+    messagebox.showinfo("Info", "Your username has been changed.")
+    fenetre1.destroy()
+
+
 def changeusername1(event):
+    global login, fenetre1
     fenetre1 = Tk()
     fenetre1.title("Change username")
-    fenetre1.geometry("200x50+400+200")
+    fenetre1.geometry("200x65+400+200")
     fenetre1.resizable(width=False, height=False)
-    Entry(fenetre1).pack()
+    login = StringVar(fenetre1)
+    entrylogin = Entry(fenetre1, textvariable=login)
+    entrylogin.pack()
+    file = open("username.txt", "r")
+    username = file.read()[0:12]
+    file.close()
+    login.set(username)
+    boutonchange = Button(fenetre1, text="Change username", command=changeuser)
+    boutonchange.pack()
+    Label(fenetre1, text="12 characters max").pack()
     fenetre1.mainloop()
+
+
+def changesavingscore(event):
+    global varsavescore
+    fenetre1 = Tk()
+    fenetre1.title("Saving score")
+    fenetre1.geometry("150x60+400+200")
+    fenetre1.resizable(width=False, height=False)
+    file = open("optionsave.txt", "r")
+    varsavescore = file.read()
+    file.close()
+
+    fenetre1.mainloop()
+
 
 def options(event):
     global tt
@@ -380,8 +417,11 @@ def options(event):
     fenetre.config(bg="#202F3E")
     backButton = canvas.create_image(225, 274, image=imageRetour)
     canvas.tag_bind(backButton, "<Button-1>", backtomenu)
-    changeusername = canvas.create_image(200,100, image=imagechangeusername)
+    changeusername = canvas.create_image(225,70, image=imagechangeusername)
     canvas.tag_bind(changeusername, "<Button-1>", changeusername1)
+
+    changesaving = canvas.create_image(225, 160, image=imagechangesaving)
+    canvas.tag_bind(changesaving, "<Button-1>", changesavingscore)
 
 
 
