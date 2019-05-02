@@ -23,27 +23,31 @@ speed = 0 # les % de increased (titre indicatif)
 vitesse = 10 # la vitesse des balles (titre qualitatif)
 
 def updatebdd():
-    r = requests.get('https://ballium.000webhostapp.com/gestiondata.php')
-    data = r.text
-    pos1 = data.find('<table style')
-    pos2 = data.find('<table>')
-    scores = r.text[pos1:pos2]
-    newscore = int(str_time)
-    file = open("username.txt", "r")
-    username = file.read()[0:12]
+    file = open("optionsave.txt", "r")
+    varsavescore = file.read()
     file.close()
-    pos3 = scores.find(str(username))
-    score = scores[pos3:pos3 + 30]
-    score = score.replace("</td>", "")
-    score = score.replace("<td>", "")
-    score = re.sub("\D", "", score)
-    if score == "":
-        score = 0
-    if int(newscore) > int(score):
-        print("Nouveau record !!")
-        r = requests.get('https://ballium.000webhostapp.com/gestiondata.php?login=' + str(username) + '&score=' + str(newscore))
-    else:
-        print("Play again")
+    if str(varsavescore) == "1":
+        r = requests.get('https://ballium.000webhostapp.com/gestiondata.php')
+        data = r.text
+        pos1 = data.find('<table style')
+        pos2 = data.find('<table>')
+        scores = r.text[pos1:pos2]
+        newscore = int(str_time)
+        file = open("username.txt", "r")
+        username = file.read()[0:12]
+        file.close()
+        pos3 = scores.find(str(username))
+        score = scores[pos3:pos3 + 30]
+        score = score.replace("</td>", "")
+        score = score.replace("<td>", "")
+        score = re.sub("\D", "", score)
+        if score == "":
+            score = 0
+        if int(newscore) > int(score):
+            print("Nouveau record !!")
+            r = requests.get('https://ballium.000webhostapp.com/gestiondata.php?login=' + str(username) + '&score=' + str(newscore))
+        else:
+            print("Play again")
 
 def gameover(event):
     global pp, tt2, images2, canvas, anim
@@ -382,7 +386,8 @@ def changeusername1(event):
     global login, fenetre1
     fenetre1 = Tk()
     fenetre1.title("Change username")
-    fenetre1.geometry("200x65+400+200")
+    fenetre1.geometry("200x65+520+300")
+    fenetre1.config(bg="#202F3E")
     fenetre1.resizable(width=False, height=False)
     login = StringVar(fenetre1)
     entrylogin = Entry(fenetre1, textvariable=login)
@@ -391,22 +396,49 @@ def changeusername1(event):
     username = file.read()[0:12]
     file.close()
     login.set(username)
-    boutonchange = Button(fenetre1, text="Change username", command=changeuser)
+    boutonchange = Button(fenetre1, text="Change username", command=changeuser, bg="#202F3E", fg="white")
     boutonchange.pack()
-    Label(fenetre1, text="12 characters max").pack()
+    Label(fenetre1, text="12 characters max", bg="#202F3E", fg="white").pack()
     fenetre1.mainloop()
 
 
+def changevalue():
+    global chkValue, varsavescore
+    if chkValue.get() == False:
+        chkValue.set(True)
+        varsavescore = 1
+    else:
+        chkValue.set(False)
+        varsavescore = 0
+
+def changesave():
+    file = open("optionsave.txt", "w")
+    file.write(str(varsavescore))
+    file.close()
+    fenetre1.destroy()
+
 def changesavingscore(event):
-    global varsavescore
+    global varsavescore, chkValue, fenetre1
     fenetre1 = Tk()
     fenetre1.title("Saving score")
-    fenetre1.geometry("150x60+400+200")
+    fenetre1.geometry("150x60+520+300")
+    fenetre1.config(bg="#202F3E")
     fenetre1.resizable(width=False, height=False)
     file = open("optionsave.txt", "r")
     varsavescore = file.read()
     file.close()
-
+    chkValue = BooleanVar()
+    checkbouton = Checkbutton(fenetre1, text='Yes', var=chkValue, command=changevalue, bg="#202F3E")
+    checkbouton.pack()
+    print (varsavescore)
+    if str(varsavescore) == "0":
+        chkValue.set(False)
+        checkbouton.deselect()
+    else:
+        chkValue.set(True)
+        checkbouton.select()
+    boutonchangesave = Button(fenetre1, text="Save and close", command=changesave, bg="#202F3E", fg="white")
+    boutonchangesave.pack()
     fenetre1.mainloop()
 
 
