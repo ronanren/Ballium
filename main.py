@@ -1,7 +1,6 @@
 from tkinter import *
 import random
 import time
-from winsound import *
 import sys
 from timeit import default_timer
 import requests
@@ -22,6 +21,10 @@ level = 1
 speed = 0 # les % de increased (titre indicatif)
 vitesse = 10 # la vitesse des balles (titre qualitatif)
 
+
+
+# Verification du score en ligne pour voir si le nouveau score fait est un nouveau record puis
+# si c'est un nouveau record, mise en ligne du score sur le site.
 def updatebdd():
     file = open("optionsave.txt", "r")
     varsavescore = file.read()
@@ -49,10 +52,11 @@ def updatebdd():
         else:
             print("Play again")
 
+
+# Elle permet d'afficher le menu de game over avec le score, elle redirige a la fin a l'actualisation des scores pour le site
 def gameover(event):
     global pp, tt2, images2, canvas, anim
     tt2 = 1
-    PlaySound("Sound/GameOverYeah.wav", SND_FILENAME | SND_ASYNC)
     fenetre.bind("<Button-1>", restart)
     fenetre.unbind("<Escape>")
     fenetre.after_cancel(updatetime)
@@ -64,11 +68,11 @@ def gameover(event):
     updatebdd()
 
 
+# Elle permet de redémarrer le jeu apres le game over
 def restart(event):
     global tt2, level, speed
     fenetre.unbind("<Button-1>")
     fenetre.bind("<Escape>", pause)
-    PlaySound("Sound/ExtraStage.wav", SND_FILENAME | SND_ASYNC)
     tt2 = 0
     level = 1
     speed = 0
@@ -78,6 +82,9 @@ def restart(event):
     level1()
     animation()
 
+
+# Ce sont les position des balles pour les vagues du jeu, la mise en place des couleurs aléatoires des balles
+# et la mise en place de la détéction des balles au curseur de souris pour perdre.
 def level1():
     global textelevel1, speed, vitesse
     x = -400
@@ -120,6 +127,7 @@ def level1():
 
 
 
+# C'est les animations des balles en boucle avec l'augmentation de la vitesse au fur et a mesure des vagues.
 def animation():
     global anim, level, text_clock
     w = fenetre.winfo_width()
@@ -142,6 +150,7 @@ def animation():
     anim = fenetre.after(60, animation)
 
 
+# Fonction qui permet de mettre le menu pause au cours du jeu
 def pause(event):
     global transparent, anim, continueButton, boutonquit, boutonmainmenu, pausetime, timepause
     fenetre.unbind("<Escape>")
@@ -159,6 +168,7 @@ def pause(event):
     canvas.tag_bind(boutonmainmenu, '<Button-1>', backtomenu)
 
 
+# Fonction qui permet de quitter le menu pause et de revenir au jeu
 def resume(event):
     global timepause
     canvas.delete(transparent)
@@ -172,6 +182,7 @@ def resume(event):
     animation()
 
 
+# Mise a jour du temps qui est en corrélation au score (1 seconde = 1 point)
 def updateTime():
     global updatetime, str_time, timepause, timeepause
     timeepause = timeepause + timepause
@@ -182,6 +193,7 @@ def updateTime():
     canvas.itemconfigure(text_clock, text=str_time)
     updatetime = fenetre.after(1000, updateTime)
 
+# Demarrage du calcul de temps pour le jeu
 def startTime():
     global text_clock, starts, timepause, timeepause
     starts = default_timer()
@@ -191,13 +203,12 @@ def startTime():
     updateTime()
 
 
-
+# Fonction qui permet de lancer le jeu (de passer du menu au jeu)
 def start(event):
     global tt1, speed, level
     tt1 = 0
     speed = 0
     level = 1
-    PlaySound("Sound/ExtraStage.wav", SND_FILENAME | SND_ASYNC)
     fenetre.unbind("<Return>")
     fenetre.bind("<Escape>", pause)
     canvas.delete(ALL)
@@ -208,7 +219,7 @@ def start(event):
     animation()
 
 
-
+# Fonction qui permet de lancer l"animation pour jouer
 def menu(event):
     global tt, tt1, giflist1, images1
     tt = 0
@@ -312,6 +323,7 @@ def button3anim2(event):
     canvas.itemconfig(button3, image=photo5)
 
 
+# Fonction pour quitter le jeu
 def destroy(event):
     global tt, tt1
     tt, tt1 = 0, 0
@@ -321,6 +333,8 @@ def destroy(event):
     except:
         pass
 
+
+# Fonction pour revenir au menu
 def backtomenu(event):
     global tt, tt1, images
     fenetre.geometry("450x300+400+200")
@@ -374,6 +388,8 @@ def backtomenu(event):
         if tt == 0:
             break
 
+
+# Fonction pour changer le pseudo
 def changeuser():
     file = open("username.txt", "w")
     file.write(login.get())
@@ -381,7 +397,7 @@ def changeuser():
     messagebox.showinfo("Info", "Your username has been changed.")
     fenetre1.destroy()
 
-
+# Fonction pour afficher le menu pour changer le pseudo
 def changeusername1(event):
     global login, fenetre1
     fenetre1 = Tk()
@@ -402,6 +418,7 @@ def changeusername1(event):
     fenetre1.mainloop()
 
 
+# Fonction pour mettre la case cocher ou non pour l'option de l'enregistrement des scores
 def changevalue():
     global chkValue, varsavescore
     if chkValue.get() == False:
@@ -411,12 +428,16 @@ def changevalue():
         chkValue.set(False)
         varsavescore = 0
 
+
+# fonction qui permet de sauvegarder l'option pour sauvergarder les scores de l'utilisateur
 def changesave():
     file = open("optionsave.txt", "w")
     file.write(str(varsavescore))
     file.close()
     fenetre1.destroy()
 
+
+# Fonction pour afficher le menu pour changer l'option de sauvegarder les scores
 def changesavingscore(event):
     global varsavescore, chkValue, fenetre1
     fenetre1 = Tk()
@@ -442,6 +463,7 @@ def changesavingscore(event):
     fenetre1.mainloop()
 
 
+# Fonction pour afficher les options
 def options(event):
     global tt
     canvas.delete(ALL)
