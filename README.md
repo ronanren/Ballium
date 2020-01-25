@@ -1,4 +1,4 @@
-# # Ballium
+# Ballium
 
 Ballium is an arcade game developed with python and the Tkinter module.
 
